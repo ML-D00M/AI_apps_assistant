@@ -1,0 +1,4 @@
+venv/
+llama_index_repo/
+aggregated_documentation_for_GPT.json
+aggregated_documentation.json
