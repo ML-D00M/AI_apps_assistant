@@ -2,3 +2,5 @@ venv/
 llama_index_repo/
 aggregated_documentation_for_GPT.json
 aggregated_documentation.json
+llamaindex_aggregated_documentation.json
+llamaindex_docs/
