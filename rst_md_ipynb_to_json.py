@@ -112,10 +112,37 @@ def process_directory(directory):
 
     return aggregated_content
 
+def process_directory_2(directory, output_folder):
+    # Create the output directory if it doesn't exist
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
+    
+    for item in os.listdir(directory):
+        item_path = os.path.join(directory, item)
+        if os.path.isdir(item_path):
+            # Process each directory
+            aggregated_content = process_directory(item_path)
+            # Use the directory name as the filename
+            output_file = os.path.join(output_folder, f"{item}.json")
+            with open(output_file, 'w', encoding='utf-8') as f:
+                json.dump(aggregated_content, f, indent=4)
+        else:
+            # Process individual files at the root level of the directory
+            if item.endswith(('.rst', '.md', '.ipynb')):
+                if item.endswith('.rst'):
+                    simplified_content = rst_to_json(item_path)
+                elif item.endswith('.md'):
+                    simplified_content = md_to_json(item_path)
+                elif item.endswith('.ipynb'):
+                    simplified_content = ipynb_to_json(item_path)
+                
+                output_file = os.path.join(output_folder, f"{os.path.splitext(item)[0]}.json")
+                with open(output_file, 'w', encoding='utf-8') as f:
+                    json.dump(simplified_content, f, indent=4)
+
+
 if __name__ == "__main__":
-    directory = '.\llama_index_repo\llama_index\docs'  # Adjust as needed
-    aggregated_content = process_directory(directory)
-    output_file = 'aggregated_documentation.json'  # This file will be created in the same directory as the script
-    with open(output_file, 'w', encoding='utf-8') as f:
-        json.dump(aggregated_content, f, indent=4)
-    print(f"All documentation has been consolidated into {output_file}")
+    docs_directory = '.\\llama_index_repo\\llama_index\\docs'  # Adjust as needed
+    output_directory = '.\\llamaindex_docs'  # Output directory for JSON files
+    process_directory_2(docs_directory, output_directory)
+    print(f"Documentation has been split into individual JSON files within {output_directory}")
